@@ -1,0 +1,563 @@
+/**
+ * NHS Design System Styles
+ * Based on NHS Digital Design System
+ * https://service-manual.nhs.uk/design-system
+ */
+
+/* ============================================================
+   CSS VARIABLES - NHS COLOR PALETTE
+   ============================================================ */
+:root {
+  /* Primary colors */
+  --nhs-blue: #005EB8;
+  --nhs-yellow: #FAE100;
+  --nhs-green: #009639;
+  --nhs-red: #DA291C;
+  --nhs-purple: #330072;
+
+  /* Greyscale */
+  --nhs-grey-1: #F0F4F5;
+  --nhs-grey-2: #D8DDE0;
+  --nhs-grey-3: #AEB7BD;
+  --nhs-grey-4: #768692;
+  --nhs-grey-5: #4c6272;
+
+  /* Text colors */
+  --nhs-text-color: #212b32;
+  --nhs-secondary-text-color: #4c6272;
+
+  /* Spacing */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 32px;
+  --spacing-8: 40px;
+  --spacing-9: 48px;
+
+  /* Border radius */
+  --border-radius: 4px;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+/* ============================================================
+   RESET & BASE STYLES
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--nhs-text-color);
+  background-color: #ffffff;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-4);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 48px;
+  letter-spacing: -1px;
+}
+
+h2 {
+  font-size: 32px;
+  letter-spacing: -0.5px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+h4 {
+  font-size: 19px;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: var(--spacing-4);
+  font-size: 19px;
+  line-height: 1.6;
+}
+
+strong, b {
+  font-weight: var(--font-weight-bold);
+}
+
+a {
+  color: var(--nhs-blue);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--nhs-purple);
+}
+
+a:visited {
+  color: var(--nhs-purple);
+}
+
+ul, ol {
+  margin-top: 0;
+  margin-bottom: var(--spacing-4);
+  padding-left: var(--spacing-6);
+}
+
+li {
+  margin-bottom: var(--spacing-2);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+button,
+.nhs-button {
+  display: inline-block;
+  padding: var(--spacing-4) var(--spacing-7);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 19px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Primary button - NHS Green */
+.nhs-button--primary,
+button[type="submit"],
+.primary-button {
+  background-color: var(--nhs-green);
+  color: #ffffff;
+  border-color: var(--nhs-green);
+}
+
+.nhs-button--primary:hover,
+button[type="submit"]:hover,
+.primary-button:hover {
+  background-color: #00782e;
+  border-color: #00782e;
+}
+
+.nhs-button--primary:focus,
+button[type="submit"]:focus,
+.primary-button:focus {
+  background-color: #00782e;
+  border-color: #00782e;
+  outline: 3px solid var(--nhs-yellow);
+  outline-offset: 0;
+}
+
+/* Secondary button */
+.nhs-button--secondary,
+.secondary-button {
+  background-color: var(--nhs-grey-1);
+  color: var(--nhs-text-color);
+  border-color: var(--nhs-grey-5);
+}
+
+.nhs-button--secondary:hover,
+.secondary-button:hover {
+  background-color: var(--nhs-grey-2);
+  border-color: var(--nhs-grey-4);
+}
+
+.nhs-button--secondary:focus,
+.secondary-button:focus {
+  outline: 3px solid var(--nhs-yellow);
+  outline-offset: 0;
+}
+
+/* Disabled button */
+button:disabled,
+.nhs-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+label {
+  display: block;
+  margin-bottom: var(--spacing-2);
+  font-size: 19px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--nhs-text-color);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="tel"],
+textarea,
+select {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-3);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 19px;
+  line-height: 1.4;
+  color: var(--nhs-text-color);
+  background-color: #ffffff;
+  border: 2px solid var(--nhs-grey-5);
+  border-radius: var(--border-radius);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+  outline: 3px solid var(--nhs-yellow);
+  outline-offset: 0;
+  border-color: var(--nhs-text-color);
+}
+
+/* Number input specific */
+input[type="number"] {
+  width: auto;
+  min-width: 120px;
+}
+
+/* Textarea */
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Select dropdown */
+select {
+  padding-right: var(--spacing-8);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23212b32' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-3) center;
+  background-size: 16px;
+}
+
+/* Radio buttons */
+input[type="radio"] {
+  width: 24px;
+  height: 24px;
+  margin-right: var(--spacing-3);
+  border: 2px solid var(--nhs-grey-5);
+  cursor: pointer;
+}
+
+input[type="radio"]:focus {
+  outline: 3px solid var(--nhs-yellow);
+  outline-offset: 0;
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  margin-right: var(--spacing-3);
+  border: 2px solid var(--nhs-grey-5);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+input[type="checkbox"]:focus {
+  outline: 3px solid var(--nhs-yellow);
+  outline-offset: 0;
+}
+
+/* Error states */
+.error-message,
+.nhs-error-message {
+  display: block;
+  margin-top: var(--spacing-2);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--nhs-red);
+}
+
+input.error,
+textarea.error,
+select.error {
+  border-color: var(--nhs-red);
+  border-width: 4px;
+}
+
+/* ============================================================
+   LAYOUT & CONTAINERS
+   ============================================================ */
+.nhs-width-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-5);
+}
+
+.nhs-main-wrapper {
+  padding-top: var(--spacing-7);
+  padding-bottom: var(--spacing-9);
+}
+
+/* ============================================================
+   CARDS & CALLOUTS
+   ============================================================ */
+.nhs-card {
+  background-color: #ffffff;
+  border: 1px solid var(--nhs-grey-2);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+}
+
+.nhs-warning-callout {
+  background-color: #FFF8E1;
+  border: 4px solid var(--nhs-yellow);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-5);
+  margin-bottom: var(--spacing-6);
+}
+
+.nhs-info-callout {
+  background-color: #F0F7FF;
+  border: 4px solid var(--nhs-blue);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-5);
+  margin-bottom: var(--spacing-6);
+}
+
+.nhs-error-callout {
+  background-color: #FFF0F0;
+  border: 4px solid var(--nhs-red);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-5);
+  margin-bottom: var(--spacing-6);
+}
+
+.nhs-success-callout {
+  background-color: #F0FFF4;
+  border: 4px solid var(--nhs-green);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-5);
+  margin-bottom: var(--spacing-6);
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.u-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.u-margin-bottom-0 { margin-bottom: 0 !important; }
+.u-margin-bottom-2 { margin-bottom: var(--spacing-2) !important; }
+.u-margin-bottom-4 { margin-bottom: var(--spacing-4) !important; }
+.u-margin-bottom-6 { margin-bottom: var(--spacing-6) !important; }
+.u-margin-bottom-8 { margin-bottom: var(--spacing-8) !important; }
+
+.u-margin-top-0 { margin-top: 0 !important; }
+.u-margin-top-2 { margin-top: var(--spacing-2) !important; }
+.u-margin-top-4 { margin-top: var(--spacing-4) !important; }
+.u-margin-top-6 { margin-top: var(--spacing-6) !important; }
+.u-margin-top-8 { margin-top: var(--spacing-8) !important; }
+
+.u-text-center { text-align: center !important; }
+.u-text-left { text-align: left !important; }
+.u-text-right { text-align: right !important; }
+
+.u-color-blue { color: var(--nhs-blue) !important; }
+.u-color-green { color: var(--nhs-green) !important; }
+.u-color-red { color: var(--nhs-red) !important; }
+
+/* ============================================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   ============================================================ */
+
+/* Tablet breakpoint: 768px */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 19px;
+  }
+
+  p, label {
+    font-size: 16px;
+  }
+
+  button,
+  .nhs-button {
+    font-size: 16px;
+    padding: var(--spacing-3) var(--spacing-5);
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  .nhs-width-container {
+    padding: 0 var(--spacing-4);
+  }
+
+  .nhs-main-wrapper {
+    padding-top: var(--spacing-5);
+    padding-bottom: var(--spacing-6);
+  }
+}
+
+/* Mobile breakpoint: 480px */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 19px;
+  }
+
+  button,
+  .nhs-button {
+    width: 100%;
+    margin-bottom: var(--spacing-3);
+  }
+
+  .nhs-width-container {
+    padding: 0 var(--spacing-3);
+  }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  button,
+  .nhs-button {
+    display: none !important;
+  }
+
+  h1 {
+    page-break-after: avoid;
+  }
+
+  h2, h3 {
+    page-break-after: avoid;
+  }
+
+  img {
+    page-break-inside: avoid;
+  }
+
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY - HIGH CONTRAST MODE
+   ============================================================ */
+@media (prefers-contrast: high) {
+  button,
+  .nhs-button {
+    border-width: 3px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  textarea,
+  select {
+    border-width: 3px;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   FOCUS VISIBLE (KEYBOARD NAVIGATION)
+   ============================================================ */
+*:focus-visible {
+  outline: 3px solid var(--nhs-yellow) !important;
+  outline-offset: 0 !important;
+}
+
+/* Remove focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
