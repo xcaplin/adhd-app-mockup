@@ -1,0 +1,410 @@
+{
+  "sections": [
+    {
+      "id": "demographics",
+      "title": "Child Information",
+      "questions": [
+        {
+          "id": "age",
+          "text": "Child age:",
+          "type": "number",
+          "min": 5,
+          "max": 18,
+          "required": true
+        },
+        {
+          "id": "gender",
+          "text": "Gender:",
+          "type": "select",
+          "options": ["Male", "Female", "Other"],
+          "priorMultipliers": {
+            "Male": { "adhd": 2.5, "autism": 4 },
+            "Female": { "adhd": 1, "autism": 1 },
+            "Other": { "adhd": 1.5, "autism": 2 }
+          }
+        },
+        {
+          "id": "familyHistory",
+          "text": "Family history (select all that apply):",
+          "type": "multiselect",
+          "options": [
+            "ADHD",
+            "Autism",
+            "Anxiety",
+            "Depression",
+            "Learning disabilities",
+            "None"
+          ],
+          "priorMultipliers": {
+            "ADHD": { "adhd": 4 },
+            "Autism": { "autism": 10 },
+            "Anxiety": { "anxiety": 3 },
+            "Depression": { "anxiety": 2, "adhd": 1.5 },
+            "Learning disabilities": { "adhd": 2 }
+          }
+        }
+      ]
+    },
+    {
+      "id": "tier1",
+      "title": "Tier 1: Core Patterns",
+      "questions": [
+        {
+          "id": "variability1",
+          "text": "Does your child's ability to focus vary dramatically based on how interesting they find the activity?",
+          "hint": "For instance, can they play video games for hours but can't focus on homework for 10 minutes?",
+          "type": "scale",
+          "options": ["Never", "Rarely", "Sometimes", "Often", "Very Often"],
+          "weights": {
+            "adhd": [0, 2, 5, 8, 10],
+            "autism": [2, 1, 0, -2, -3]
+          },
+          "mlKey": "variability",
+          "mlType": "index"
+        },
+        {
+          "id": "variability2",
+          "text": "Does your child have 'good days' and 'bad days' with attention, even when tasks and environment are similar?",
+          "hint": "Some days they can complete tasks, other days they can't, without obvious reason",
+          "type": "scale",
+          "options": ["Never", "Rarely", "Sometimes", "Often", "Very Often"],
+          "weights": {
+            "adhd": [0, 2, 4, 7, 9],
+            "autism": [1, 0, 0, -1, -2]
+          },
+          "mlKey": "variabilityTemporal",
+          "mlType": "index"
+        },
+        {
+          "id": "noveltyPreference",
+          "text": "How does your child respond to new vs familiar situations?",
+          "type": "select",
+          "options": [
+            "Strongly prefers exciting new activities and gets bored with routines",
+            "Prefers new activities but can tolerate routines",
+            "Balanced - okay with both new and familiar",
+            "Prefers familiar routines but can handle some novelty",
+            "Strongly prefers familiar routines and becomes very distressed with unexpected changes"
+          ],
+          "weights": {
+            "adhd": [25, 15, 0, -5, -15],
+            "autism": [-15, -5, 0, 10, 25],
+            "anxiety": [-5, 0, 0, 5, 10]
+          },
+          "mlKey": "noveltySeeking",
+          "mlValues": ["strong", "moderate", "balanced", "moderate", "negative"]
+        },
+        {
+          "id": "rewardResponse",
+          "text": "How does your child respond to immediate rewards or incentives?",
+          "hint": "E.g., sticker charts, earning screen time, immediate praise",
+          "type": "select",
+          "options": [
+            "Dramatic improvement - they can focus much better with immediate rewards",
+            "Moderate improvement with immediate rewards",
+            "Minimal change with rewards",
+            "Rewards seem to make things worse or create more conflict"
+          ],
+          "weights": {
+            "adhd": [20, 12, -5, -10],
+            "autism": [5, 5, 0, 5],
+            "anxiety": [3, 5, 0, -5]
+          },
+          "mlKey": "rewardResponse",
+          "mlValues": ["dramatic", "moderate", "minimal", "negative"]
+        },
+        {
+          "id": "hyperfocus",
+          "text": "When does your child show the most intense focus and concentration?",
+          "type": "select",
+          "options": [
+            "On highly stimulating activities (games, screens, exciting play) regardless of educational value",
+            "On their specific interests (e.g., dinosaurs, trains, specific topics) regardless of stimulation level",
+            "Fairly consistent across different activities",
+            "Struggles to focus intensely on anything"
+          ],
+          "weights": {
+            "adhd": [15, 5, -8, 0],
+            "autism": [3, 15, -5, 0],
+            "anxiety": [0, 0, 5, 10],
+            "trauma": [0, 0, 0, 5]
+          },
+          "mlKey": "hyperfocusPattern",
+          "mlValues": ["rewardDriven", "interestDriven", "consistent", "impaired"]
+        }
+      ]
+    },
+    {
+      "id": "tier2",
+      "title": "Tier 2: Supporting Evidence",
+      "questions": [
+        {
+          "id": "socialMotivation",
+          "text": "How would you describe your child's interest in friendships?",
+          "type": "select",
+          "options": [
+            "Really wants friends but struggles to keep them due to impulsive behavior (interrupting, not listening)",
+            "Wants friends but struggles due to not understanding social rules",
+            "Wants friends but too anxious or worried to maintain friendships",
+            "Generally prefers to play alone and seems content with limited social interaction",
+            "Avoids others due to mistrust or fear"
+          ],
+          "weights": {
+            "adhd": [10, 0, 0, -5, -5],
+            "autism": [-10, 10, 0, 10, 0],
+            "anxiety": [0, 0, 12, -5, 5],
+            "trauma": [0, 0, 0, 0, 15]
+          },
+          "mlKey": "socialPattern",
+          "mlValues": ["impulsive", "autistic", "anxious", "solitary", "avoidant"]
+        },
+        {
+          "id": "activityLevel",
+          "text": "Describe your child's physical activity level:",
+          "type": "select",
+          "ageAdjusted": true,
+          "options": [
+            "Constantly moving, \"driven by a motor\", cannot sit still even briefly",
+            "Very active, fidgets constantly, difficulty sitting for meals/class",
+            "Moderately active, can sit when required but prefers movement",
+            "Average activity level for age",
+            "Lower activity than peers, seems sluggish or \"in their own world\""
+          ],
+          "weights": {
+            "adhd": [15, 12, 5, -5, -8],
+            "autism": [0, 0, 0, 0, 3],
+            "anxiety": [0, 3, 0, 0, 5]
+          },
+          "ageAdjustments": {
+            "young": { "index": 1, "adjustment": -5 },
+            "older": { "index": 0, "adjustment": 5 }
+          },
+          "mlKey": "hyperactivity",
+          "mlValues": ["extreme", "present", "moderate", "absent", "absent"]
+        },
+        {
+          "id": "structureResponse",
+          "text": "How does your child respond to structure and organization provided by others?",
+          "type": "select",
+          "options": [
+            "Functions much better when given clear structure, schedules, and external organization",
+            "Needs very predictable, unchanging routines and becomes upset with variations",
+            "Minimal difference with structure",
+            "Resists structure and fights against routines"
+          ],
+          "weights": {
+            "adhd": [10, 0, -5, 5],
+            "autism": [5, 15, -5, -5],
+            "anxiety": [5, 5, 0, 0]
+          },
+          "mlKey": "structureResponse",
+          "mlValues": ["improves", "rigid", "neutral", "resistant"]
+        },
+        {
+          "id": "taskCompletion",
+          "text": "When your child doesn't complete tasks, what's usually the reason?",
+          "type": "select",
+          "options": [
+            "Gets distracted by other thoughts or activities",
+            "Finds the task boring or not stimulating enough",
+            "Becomes anxious or worried about doing it wrong",
+            "The task disrupts their preferred routine or interest",
+            "Seems frozen, shutdown, or overwhelmed"
+          ],
+          "weights": {
+            "adhd": [12, 15, 0, 0, 0],
+            "autism": [0, 0, 0, 12, 3],
+            "anxiety": [0, 0, 15, 0, 8],
+            "trauma": [0, 0, 0, 0, 12]
+          }
+        },
+        {
+          "id": "emotionalPattern",
+          "text": "Describe your child's emotional reactions:",
+          "type": "select",
+          "options": [
+            "Intense emotional reactions (frustration, excitement) that pass quickly",
+            "Becomes very upset when expectations are violated or things don't go as planned",
+            "Persistent worry or fearfulness that lasts for extended periods",
+            "Sudden fear responses, hypervigilance, or seems \"on edge\"",
+            "Generally emotionally regulated"
+          ],
+          "weights": {
+            "adhd": [12, 3, 0, 0, -10],
+            "autism": [3, 15, 0, 0, -5],
+            "anxiety": [0, 5, 15, 8, -10],
+            "trauma": [0, 0, 0, 18, -10]
+          },
+          "mlKey": "emotionalRegulation",
+          "mlValues": ["labile", "rigidUpset", "anxious", "traumaResponse", "regulated"]
+        },
+        {
+          "id": "communicationStyle",
+          "text": "How does your child communicate?",
+          "type": "select",
+          "options": [
+            "Talks excessively, interrupts, blurts out answers",
+            "One-sided conversations focused on their interests, difficulty with back-and-forth",
+            "Hesitant to speak, especially in new situations",
+            "Communication is typical for their age"
+          ],
+          "weights": {
+            "adhd": [15, 0, 0, -8],
+            "autism": [0, 15, 0, -8],
+            "anxiety": [0, 0, 12, -5]
+          }
+        },
+        {
+          "id": "attentionContent",
+          "text": "When your child's mind wanders or they seem distracted, what are they usually thinking about?",
+          "type": "select",
+          "options": [
+            "Random thoughts, daydreams, whatever pops into their head",
+            "Their specific interests or topics they love",
+            "Worries about school, friends, family, or what might go wrong",
+            "Seems checked out, dissociated, or numb",
+            "Don't know / unclear"
+          ],
+          "weights": {
+            "adhd": [12, 3, 0, 0, 0],
+            "autism": [0, 12, 0, 0, 0],
+            "anxiety": [-5, 0, 15, 0, 0],
+            "trauma": [0, 0, 0, 15, 0]
+          },
+          "mlKey": "attentionContent",
+          "mlValues": ["random", "interests", "worry", "dissociated", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "tier3",
+      "title": "Tier 3: Context & Development",
+      "questions": [
+        {
+          "id": "onsetAge",
+          "text": "When did you first notice these difficulties?",
+          "type": "select",
+          "options": [
+            "Before age 5",
+            "Between ages 5-7",
+            "Between ages 8-12",
+            "After age 12"
+          ],
+          "weights": {
+            "adhd": [10, 10, 0, -15],
+            "autism": [10, 5, 0, -10],
+            "anxiety": [-5, 0, 5, 5],
+            "trauma": [-10, -5, 0, 5]
+          },
+          "mlKey": "onset",
+          "mlValues": ["veryEarly", "early", "middle", "late"]
+        },
+        {
+          "id": "triggerEvent",
+          "text": "Did these difficulties begin after a specific event or were they always present?",
+          "type": "select",
+          "options": [
+            "Always been present, as long as I can remember",
+            "Gradually developed over time with no clear trigger",
+            "Began after a specific stressful event (loss, divorce, move, trauma)",
+            "Worsened after a specific event but some difficulties were always there"
+          ],
+          "weights": {
+            "adhd": [10, 5, -15, 3],
+            "autism": [10, 5, -10, 3],
+            "anxiety": [-5, 5, 10, 8],
+            "trauma": [-20, -10, 25, 5]
+          },
+          "mlKey": "trigger",
+          "mlValues": ["always", "gradual", "postEvent", "exacerbated"]
+        },
+        {
+          "id": "pervasiveness",
+          "text": "Where do these difficulties occur? (Select all that apply)",
+          "type": "multiselect",
+          "options": [
+            "At home",
+            "At school",
+            "With friends/social situations",
+            "In public places",
+            "During activities/hobbies"
+          ],
+          "weights": {
+            "adhd": [3, 5, 3, 3, 4],
+            "autism": [3, 4, 5, 4, 3],
+            "anxiety": [3, 4, 5, 5, 3],
+            "trauma": [3, 3, 4, 4, 3]
+          }
+        },
+        {
+          "id": "sleepIssues",
+          "text": "Does your child have sleep difficulties?",
+          "type": "select",
+          "options": [
+            "No significant sleep problems",
+            "Difficulty falling asleep but sleeps through the night",
+            "Snoring, gasping, or irregular breathing during sleep",
+            "Nightmares or fear of sleeping",
+            "Multiple sleep issues (trouble falling asleep, staying asleep, nightmares)"
+          ],
+          "sleepScores": [0, 3, 8, 5, 10],
+          "weights": {
+            "adhd": [0, 3, 0, 0, 0],
+            "anxiety": [0, 0, 0, 5, 0],
+            "trauma": [0, 0, 0, 8, 0]
+          }
+        },
+        {
+          "id": "sensorySensitivities",
+          "text": "Does your child have sensory sensitivities?",
+          "type": "select",
+          "options": [
+            "Extreme distress with certain textures, sounds, lights (e.g., tags in clothes, loud noises)",
+            "Some sensitivities but manageable",
+            "Seeks intense sensory input (spinning, crashing, loud sounds)",
+            "Typical sensory responses"
+          ],
+          "weights": {
+            "adhd": [0, 0, 5, 0],
+            "autism": [15, 8, 8, -5],
+            "anxiety": [3, 5, 0, 0]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tier4",
+      "title": "Tier 4: Functional Impact",
+      "questions": [
+        {
+          "id": "academicImpact",
+          "text": "How much do these behaviors interfere with academic performance?",
+          "type": "scale",
+          "options": ["Not at all", "A little", "Somewhat", "Quite a bit", "Very much"],
+          "impairmentDomain": "academic"
+        },
+        {
+          "id": "socialImpact",
+          "text": "How much do these behaviors affect friendships and social relationships?",
+          "type": "scale",
+          "options": ["Not at all", "A little", "Somewhat", "Quite a bit", "Very much"],
+          "impairmentDomain": "social"
+        },
+        {
+          "id": "familyImpact",
+          "text": "How much do these behaviors affect family life and home functioning?",
+          "type": "scale",
+          "options": ["Not at all", "A little", "Somewhat", "Quite a bit", "Very much"],
+          "impairmentDomain": "family"
+        },
+        {
+          "id": "emotionalImpact",
+          "text": "How is your child's self-esteem and emotional wellbeing?",
+          "type": "scale",
+          "options": ["Very good", "Good", "Fair", "Poor", "Very poor"],
+          "impairmentDomain": "emotional"
+        }
+      ]
+    }
+  ]
+}
