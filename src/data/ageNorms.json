@@ -1,0 +1,32 @@
+{
+  "6": {
+    "attentionSpan": 12,
+    "hyperactivityExpected": true,
+    "impulsivityHigh": true,
+    "note": "High activity normal at age 6. Look for extreme impairment across ALL settings."
+  },
+  "9": {
+    "attentionSpan": 20,
+    "hyperactivityExpected": true,
+    "impulsivityHigh": true,
+    "note": "Hyperactivity should be decreasing. Persistent extreme motor restlessness is concerning."
+  },
+  "12": {
+    "attentionSpan": 30,
+    "hyperactivityExpected": false,
+    "impulsivityHigh": false,
+    "note": "Physical hyperactivity atypical at age 12. Inattention and executive dysfunction more prominent."
+  },
+  "15": {
+    "attentionSpan": 45,
+    "hyperactivityExpected": false,
+    "impulsivityHigh": false,
+    "note": "ADHD presents as executive dysfunction, time management issues, procrastination."
+  },
+  "18": {
+    "attentionSpan": 60,
+    "hyperactivityExpected": false,
+    "impulsivityHigh": false,
+    "note": "ADHD manifests as chronic disorganization, inability to manage adult responsibilities."
+  }
+}
