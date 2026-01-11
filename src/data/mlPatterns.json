@@ -1,0 +1,63 @@
+{
+  "adhdPatterns": [
+    {
+      "name": "ADHD Combined Type",
+      "signature": {
+        "variability": "high",
+        "noveltySeeking": "strong",
+        "rewardResponse": "dramatic",
+        "hyperactivity": "present"
+      },
+      "confidenceBoost": 25,
+      "prevalence": 0.60
+    },
+    {
+      "name": "ADHD Inattentive Type",
+      "signature": {
+        "variability": "high",
+        "noveltySeeking": ["moderate", "strong"],
+        "rewardResponse": ["moderate", "dramatic"],
+        "hyperactivity": ["absent", "moderate"]
+      },
+      "confidenceBoost": 20,
+      "prevalence": 0.30
+    }
+  ],
+  "autismPatterns": [
+    {
+      "name": "Autism Classic",
+      "signature": {
+        "variability": "low",
+        "noveltySeeking": "negative",
+        "hyperfocusPattern": "interestDriven",
+        "structureResponse": ["rigid", "improves"]
+      },
+      "confidenceBoost": 30,
+      "prevalence": 0.70
+    }
+  ],
+  "anxietyPatterns": [
+    {
+      "name": "Generalized Anxiety",
+      "signature": {
+        "attentionContent": "worry",
+        "emotionalRegulation": ["anxious", "labile"],
+        "socialPattern": "anxious"
+      },
+      "confidenceBoost": 20,
+      "prevalence": 0.60
+    }
+  ],
+  "traumaPatterns": [
+    {
+      "name": "PTSD Presentation",
+      "signature": {
+        "trigger": "postEvent",
+        "emotionalRegulation": "traumaResponse",
+        "socialPattern": "avoidant"
+      },
+      "confidenceBoost": 25,
+      "prevalence": 0.50
+    }
+  ]
+}
