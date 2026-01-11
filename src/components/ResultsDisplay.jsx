@@ -1,5 +1,6 @@
 import React from 'react';
-import { AlertCircle, CheckCircle, Info, TrendingUp } from 'lucide-react';
+import { AlertCircle, CheckCircle, Info, TrendingUp, AlertTriangle } from 'lucide-react';
+import { generateRecommendations } from '../utils/mlMatcher';
 
 /**
  * Results Display Component
@@ -241,63 +242,78 @@ const ImpairmentSummary = ({ impairment }) => {
 };
 
 /**
- * Recommendations Component
+ * Recommendations Component - V8 Specification
+ * Uses generateRecommendations from mlMatcher for detailed clinical recommendations
  */
 const Recommendations = ({ probabilities, confidence, impairment, sleepScore }) => {
-  const recommendations = [];
+  // Generate V8-compliant recommendations
+  const recs = generateRecommendations(probabilities, impairment, sleepScore);
 
-  // Get highest probability condition
-  const highest = Object.entries(probabilities).reduce((max, [key, val]) =>
-    val > max.val ? { key, val } : max,
-    { key: null, val: 0 }
-  );
-
-  // Sleep recommendation
-  if (sleepScore >= 8) {
-    recommendations.push({
-      priority: 'urgent',
-      text: 'Arrange a sleep evaluation with your GP or a sleep specialist before pursuing other assessments.'
-    });
-  }
-
-  // High probability + significant impairment
-  if (highest.val > 40 && impairment.total >= 8) {
-    recommendations.push({
-      priority: 'high',
-      text: `Consider referral for professional ${highest.key.toUpperCase()} assessment through your GP or CAMHS (Child and Adolescent Mental Health Services).`
-    });
-  }
-
-  // Moderate probability
-  if (highest.val > 25 && highest.val <= 40) {
-    recommendations.push({
-      priority: 'moderate',
-      text: 'Discuss concerns with your child\'s teacher and GP. Keep a diary of behaviors and difficulties.'
-    });
-  }
-
-  // Low impairment despite symptoms
-  if (impairment.total < 6) {
-    recommendations.push({
-      priority: 'info',
-      text: 'While some patterns are present, functional impairment is limited. Monitor and reassess if difficulties increase.'
-    });
-  }
-
-  // General recommendation
-  recommendations.push({
-    priority: 'info',
-    text: 'This screening tool provides preliminary information only. A comprehensive assessment by qualified professionals is needed for diagnosis.'
-  });
+  // Map urgency to priority styles
+  const urgencyPriority = {
+    urgent: 'urgent',
+    priority: 'high',
+    routine: 'moderate'
+  };
 
   return (
     <div style={styles.recommendationsContainer}>
-      {recommendations.map((rec, index) => (
-        <div key={index} style={{ ...styles.recommendationCard, ...styles[`priority_${rec.priority}`] }}>
-          <TrendingUp size={20} style={styles.recommendationIcon} />
-          <p style={styles.recommendationText}>{rec.text}</p>
+      {/* Urgency indicator */}
+      <div style={{
+        ...styles.urgencyBadge,
+        backgroundColor: recs.urgency === 'urgent' ? '#DA291C' :
+                         recs.urgency === 'priority' ? '#FAE100' : '#AEB7BD',
+        color: recs.urgency === 'priority' ? '#212b32' : 'white'
+      }}>
+        <strong>Urgency: {recs.urgency.toUpperCase()}</strong>
+      </div>
+
+      {/* Flags (if any) */}
+      {recs.flags.length > 0 && (
+        <div>
+          <h4 style={styles.recSectionTitle}>⚠️ Important Flags</h4>
+          {recs.flags.map((flag, index) => (
+            <div key={index} style={{ ...styles.recommendationCard, ...styles.priority_urgent }}>
+              <AlertTriangle size={20} style={styles.recommendationIcon} />
+              <p style={styles.recommendationText}>{flag}</p>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
+
+      {/* Referrals */}
+      {recs.referrals.length > 0 && (
+        <div>
+          <h4 style={styles.recSectionTitle}>📋 Recommended Assessments & Referrals</h4>
+          {recs.referrals.map((referral, index) => (
+            <div key={index} style={{ ...styles.recommendationCard, ...styles[`priority_${urgencyPriority[recs.urgency]}`] }}>
+              <TrendingUp size={20} style={styles.recommendationIcon} />
+              <p style={styles.recommendationText}>{referral}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Support strategies */}
+      {recs.support.length > 0 && (
+        <div>
+          <h4 style={styles.recSectionTitle}>💡 Support Strategies</h4>
+          {recs.support.map((strategy, index) => (
+            <div key={index} style={{ ...styles.recommendationCard, ...styles.priority_info }}>
+              <Info size={20} style={styles.recommendationIcon} />
+              <p style={styles.recommendationText}>{strategy}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* General disclaimer */}
+      <div style={{ ...styles.recommendationCard, ...styles.priority_info, marginTop: '24px' }}>
+        <Info size={20} style={styles.recommendationIcon} />
+        <p style={styles.recommendationText}>
+          This screening tool provides preliminary information only. A comprehensive assessment by qualified professionals is needed for diagnosis.
+        </p>
+      </div>
     </div>
   );
 };
@@ -487,6 +503,20 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
+  },
+  urgencyBadge: {
+    padding: '12px 20px',
+    borderRadius: '4px',
+    textAlign: 'center',
+    fontSize: '16px',
+    marginBottom: '16px',
+  },
+  recSectionTitle: {
+    fontSize: '19px',
+    fontWeight: '600',
+    color: '#005EB8',
+    marginTop: '16px',
+    marginBottom: '12px',
   },
   recommendationCard: {
     display: 'flex',
