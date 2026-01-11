@@ -110,8 +110,9 @@ function handleScaleQuestion(question, response, scores, age, mlFeatures) {
   }
 
   // Extract ML features
+  // For mlType: "index", store the numeric index (0-4) directly
   if (question.mlKey && question.mlType === 'index') {
-    mlFeatures[question.mlKey] = responseIndex >= 3 ? 'high' : 'low';
+    mlFeatures[question.mlKey] = responseIndex;
   }
 }
 

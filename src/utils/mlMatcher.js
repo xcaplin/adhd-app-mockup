@@ -1,124 +1,85 @@
 import mlPatternsData from '../data/mlPatterns.json';
 
 /**
- * ML Pattern Matcher
- * Matches extracted ML features against known diagnostic patterns
+ * ML Pattern Matcher - V8 Specification
+ * Hardcoded pattern matching logic based on empirical evidence
  * Returns confidence bonuses for matched patterns
  */
 
 /**
- * Match ML features against all pattern signatures
+ * Match ML features against V8 pattern specifications
+ * Uses numeric variability (0-4 index) and string values for other features
  * @param {Object} mlFeatures - Features extracted from question responses
- * @returns {Object} Match results for each condition with confidence boosts
+ * @returns {Object} Match results with confidence boosts for each condition
  */
 export function matchPatterns(mlFeatures) {
-  const matches = {
-    adhd: findBestMatch(mlFeatures, mlPatternsData.adhdPatterns),
-    autism: findBestMatch(mlFeatures, mlPatternsData.autismPatterns),
-    anxiety: findBestMatch(mlFeatures, mlPatternsData.anxietyPatterns),
-    trauma: findBestMatch(mlFeatures, mlPatternsData.traumaPatterns)
+  const matchedPatterns = {
+    adhd: { matched: false, patternName: null, confidenceBoost: 0 },
+    autism: { matched: false, patternName: null, confidenceBoost: 0 },
+    anxiety: { matched: false, patternName: null, confidenceBoost: 0 },
+    trauma: { matched: false, patternName: null, confidenceBoost: 0 }
   };
 
-  return matches;
-}
-
-/**
- * Find the best matching pattern for a condition
- * @param {Object} mlFeatures - Features extracted from responses
- * @param {Array} patterns - Array of pattern definitions for a condition
- * @returns {Object} Best match with confidence boost or null
- */
-function findBestMatch(mlFeatures, patterns) {
-  let bestMatch = null;
-  let bestScore = 0;
-
-  patterns.forEach(pattern => {
-    const matchResult = matchPattern(mlFeatures, pattern);
-
-    if (matchResult.matched && matchResult.score > bestScore) {
-      bestScore = matchResult.score;
-      bestMatch = {
-        matched: true,
-        patternName: pattern.name,
-        confidenceBoost: pattern.confidenceBoost,
-        prevalence: pattern.prevalence,
-        matchScore: matchResult.score,
-        matchedFeatures: matchResult.matchedFeatures,
-        totalFeatures: matchResult.totalFeatures
-      };
-    }
-  });
-
-  if (!bestMatch) {
-    return {
-      matched: false,
-      confidenceBoost: 0
+  // ADHD Combined Type Pattern
+  // High variability (index >= 3) + Strong novelty seeking + Dramatic reward response + Present hyperactivity
+  if (mlFeatures.variability >= 3 &&
+      mlFeatures.noveltySeeking === 'strong' &&
+      mlFeatures.rewardResponse === 'dramatic' &&
+      mlFeatures.hyperactivity === 'present') {
+    matchedPatterns.adhd = {
+      matched: true,
+      patternName: 'ADHD Combined Type',
+      confidenceBoost: 25
+    };
+  }
+  // ADHD Inattentive Type Pattern
+  // High variability (index >= 3) + Absent/Moderate hyperactivity + Moderate/Dramatic reward response
+  else if (mlFeatures.variability >= 3 &&
+           (mlFeatures.hyperactivity === 'absent' || mlFeatures.hyperactivity === 'moderate') &&
+           (mlFeatures.rewardResponse === 'moderate' || mlFeatures.rewardResponse === 'dramatic')) {
+    matchedPatterns.adhd = {
+      matched: true,
+      patternName: 'ADHD Inattentive Type',
+      confidenceBoost: 20
     };
   }
 
-  return bestMatch;
-}
-
-/**
- * Match ML features against a single pattern signature
- * @param {Object} mlFeatures - Features from responses
- * @param {Object} pattern - Pattern definition with signature
- * @returns {Object} Match result with score and details
- */
-function matchPattern(mlFeatures, pattern) {
-  const signature = pattern.signature;
-  const signatureKeys = Object.keys(signature);
-
-  let matchedFeatures = 0;
-  let totalFeatures = signatureKeys.length;
-  const matchedKeys = [];
-
-  signatureKeys.forEach(key => {
-    const expectedValue = signature[key];
-    const actualValue = mlFeatures[key];
-
-    // Skip if feature not present in responses
-    if (actualValue === undefined || actualValue === null) {
-      return;
-    }
-
-    // Check if values match
-    if (matchesValue(actualValue, expectedValue)) {
-      matchedFeatures++;
-      matchedKeys.push(key);
-    }
-  });
-
-  // Calculate match score (percentage of features matched)
-  const matchScore = totalFeatures > 0 ? (matchedFeatures / totalFeatures) : 0;
-
-  // Require at least 75% match to consider pattern matched
-  const matched = matchScore >= 0.75;
-
-  return {
-    matched,
-    score: matchScore,
-    matchedFeatures,
-    totalFeatures,
-    matchedKeys
-  };
-}
-
-/**
- * Check if actual value matches expected value
- * Supports both exact string matching and array matching
- * @param {string} actualValue - Value from ML features
- * @param {string|Array} expectedValue - Expected value(s) from pattern signature
- * @returns {boolean} True if matches
- */
-function matchesValue(actualValue, expectedValue) {
-  // Array matching: check if actual value is in array
-  if (Array.isArray(expectedValue)) {
-    return expectedValue.includes(actualValue);
+  // Autism Classic Pattern
+  // Low variability (index 0-1) + Negative novelty seeking + Interest-driven hyperfocus
+  if ((mlFeatures.variability === 0 || mlFeatures.variability === 1) &&
+      mlFeatures.noveltySeeking === 'negative' &&
+      mlFeatures.hyperfocusPattern === 'interestDriven') {
+    matchedPatterns.autism = {
+      matched: true,
+      patternName: 'Autism Classic',
+      confidenceBoost: 30
+    };
   }
 
-  // Exact string matching
-  return actualValue === expectedValue;
+  // Generalized Anxiety Pattern
+  // Worry-based attention content + Non-regulated emotional state
+  if (mlFeatures.attentionContent === 'worry' &&
+      mlFeatures.emotionalRegulation &&
+      mlFeatures.emotionalRegulation !== 'regulated') {
+    matchedPatterns.anxiety = {
+      matched: true,
+      patternName: 'Generalized Anxiety',
+      confidenceBoost: 20
+    };
+  }
+
+  // PTSD/Trauma Pattern
+  // Post-event trigger + Trauma response in emotional regulation
+  if (mlFeatures.trigger === 'postEvent' &&
+      mlFeatures.emotionalRegulation === 'traumaResponse') {
+    matchedPatterns.trauma = {
+      matched: true,
+      patternName: 'PTSD Presentation',
+      confidenceBoost: 25
+    };
+  }
+
+  return matchedPatterns;
 }
 
 /**
@@ -169,7 +130,9 @@ export function checkPatternCoherence(mlFeatures) {
   const warnings = [];
 
   // Check for ADHD contradictions
-  if (mlFeatures.variability === 'low' && mlFeatures.rewardResponse === 'dramatic') {
+  // Low variability (0-1) with dramatic reward response is unusual
+  if (mlFeatures.variability !== undefined && mlFeatures.variability <= 1 &&
+      mlFeatures.rewardResponse === 'dramatic') {
     warnings.push('Unusual pattern: Low variability with dramatic reward response');
   }
 
@@ -234,4 +197,100 @@ function calculateSuggestionStrength(probability, match) {
   }
 
   return strength;
+}
+
+/**
+ * Generate V8-specification clinical recommendations
+ * @param {Object} probabilities - Probability scores for each condition
+ * @param {Object} impairment - Impairment scores across domains
+ * @param {number} sleepScore - Sleep confounder score
+ * @returns {Object} Comprehensive recommendations object
+ */
+export function generateRecommendations(probabilities, impairment, sleepScore) {
+  // Find primary condition (highest probability)
+  const primaryCondition = Object.entries(probabilities).reduce((max, [key, val]) =>
+    val > max.val ? { key, val } : max,
+    { key: null, val: 0 }
+  );
+
+  const recommendations = {
+    urgency: primaryCondition.val > 70 ? 'urgent' : primaryCondition.val > 50 ? 'priority' : 'routine',
+    referrals: [],
+    support: [],
+    flags: []
+  };
+
+  // ADHD-specific referrals (threshold: 40%)
+  if (probabilities.adhd > 40) {
+    recommendations.referrals.push('ADHD assessment with developmental paediatrician or CAMHS');
+  }
+
+  // Autism-specific referrals (threshold: 30%)
+  if (probabilities.autism > 30) {
+    recommendations.referrals.push('Autism diagnostic assessment (ADOS-2) through local autism pathway');
+  }
+
+  // Anxiety-specific referrals (threshold: 50%)
+  if (probabilities.anxiety > 50) {
+    recommendations.referrals.push('CAMHS referral for anxiety assessment and treatment');
+  }
+
+  // Trauma-specific referrals (threshold: 30%)
+  if (probabilities.trauma > 30) {
+    recommendations.referrals.push('Trauma-informed therapy (e.g., EMDR, trauma-focused CBT)');
+  }
+
+  // Sleep confounder flag (threshold: 6+)
+  if (sleepScore > 6) {
+    recommendations.referrals.push('Sleep study consultation - rule out sleep apnea/sleep disorders');
+    recommendations.flags.push('Sleep disturbance can mimic ADHD symptoms - address sleep issues first');
+  }
+
+  // Academic impairment (threshold: 3+)
+  if (impairment.academic >= 3) {
+    recommendations.referrals.push('Educational psychology assessment for school support');
+    recommendations.support.push('Request school SENCO meeting to discuss educational support needs');
+  }
+
+  // Emotional wellbeing concerns (threshold: 4+)
+  if (impairment.emotional >= 4) {
+    recommendations.flags.push('Significant impact on self-esteem - monitor for depression/self-harm risk');
+    recommendations.support.push('Consider counseling/therapeutic support for emotional wellbeing');
+  }
+
+  // ADHD-specific support strategies (threshold: 30%)
+  if (probabilities.adhd > 30) {
+    recommendations.support.push('Break tasks into smaller chunks with frequent breaks (e.g., 15-20 min work periods)');
+    recommendations.support.push('Use immediate, specific rewards for completed tasks (token economy, instant feedback)');
+    recommendations.support.push('Provide high-stimulation breaks between tasks (physical activity, sensory input)');
+    recommendations.support.push('Minimize distractions in study environment (quiet space, reduce visual clutter)');
+    recommendations.support.push('Use timers and visual schedules to aid time awareness');
+  }
+
+  // Autism-specific support strategies (threshold: 30%)
+  if (probabilities.autism > 30) {
+    recommendations.support.push('Maintain predictable routines with advance warning of changes (visual countdown)');
+    recommendations.support.push('Provide visual schedules and social stories for transitions and new situations');
+    recommendations.support.push('Reduce sensory overload (quiet spaces, ear defenders, fidget tools if needed)');
+    recommendations.support.push('Allow for special interest time as motivation and regulation tool');
+    recommendations.support.push('Use concrete, literal language and check understanding');
+  }
+
+  // Anxiety-specific support strategies (threshold: 40%)
+  if (probabilities.anxiety > 40) {
+    recommendations.support.push('Teach and practice calming techniques (deep breathing, grounding exercises)');
+    recommendations.support.push('Gradual exposure to anxiety-provoking situations with support');
+    recommendations.support.push('Validate worries while gently challenging catastrophic thinking');
+    recommendations.support.push('Create a worry time/worry box to contain anxious thoughts');
+  }
+
+  // Trauma-specific support strategies (threshold: 25%)
+  if (probabilities.trauma > 25) {
+    recommendations.support.push('Ensure safety and predictability in environment (consistent routines, safe spaces)');
+    recommendations.support.push('Trauma-informed behavior support - avoid punishment, use connection and regulation');
+    recommendations.support.push('Be aware of trauma triggers and provide warning/choice when possible');
+    recommendations.support.push('Build trusting relationships before making demands');
+  }
+
+  return recommendations;
 }
