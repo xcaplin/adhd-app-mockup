@@ -71,6 +71,9 @@ body {
 
 /* ============================================================
    TYPOGRAPHY
+   NOTE: NHS uses Frutiger as primary typeface, with Arial as fallback.
+   Frutiger requires an NHS license. This implementation uses Arial,
+   which is the recommended fallback for web-based NHS services.
    ============================================================ */
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
@@ -560,4 +563,21 @@ select.error {
 /* Remove focus outline for mouse users */
 *:focus:not(:focus-visible) {
   outline: none;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--nhs-yellow);
+  color: var(--nhs-text-color);
+  padding: var(--spacing-3) var(--spacing-4);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
 }

@@ -313,21 +313,26 @@ function App() {
   // Main render
   return (
     <div style={styles.app}>
+      {/* Skip link for keyboard users */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       <NHSHeader title="ADHD Screening Tool" />
 
-      <main style={styles.main}>
+      <main id="main-content" style={styles.main} role="main" aria-label="Main content">
         {currentStep === 'intro' && renderIntro()}
         {currentStep === 'screening' && renderScreening()}
         {currentStep === 'results' && renderResults()}
       </main>
 
-      <footer style={styles.footer}>
+      <footer style={styles.footer} role="contentinfo" aria-label="Site footer">
         <div style={styles.footerContent}>
           <p style={styles.footerText}>
             NHS ADHD Screening Tool | For educational and screening purposes only
           </p>
           <p style={styles.footerText}>
-            In an emergency, call 999 | For urgent mental health support, contact your local crisis team
+            In an emergency, call <a href="tel:999" style={styles.footerLink} aria-label="Call 999 for emergencies">999</a> | For urgent mental health support, contact your local crisis team
           </p>
         </div>
       </footer>
@@ -452,6 +457,11 @@ const styles = {
   footerText: {
     fontSize: '14px',
     margin: '8px 0',
+  },
+  footerLink: {
+    color: 'white',
+    textDecoration: 'underline',
+    fontWeight: '700',
   },
 };
 

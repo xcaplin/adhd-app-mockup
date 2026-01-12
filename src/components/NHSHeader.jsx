@@ -8,20 +8,22 @@ import React from 'react';
 
 const NHSHeader = ({ title = "ADHD Screening Tool" }) => {
   return (
-    <header style={styles.header}>
+    <header style={styles.header} role="banner" aria-label="NHS site header">
       {/* Yellow stripe at top */}
-      <div style={styles.yellowStripe}></div>
+      <div style={styles.yellowStripe} aria-hidden="true"></div>
 
       {/* Main header content */}
       <div style={styles.headerContent}>
         {/* NHS Logo */}
         <div style={styles.logoContainer}>
-          <NHSLogo />
+          <a href="/" aria-label="NHS Homepage">
+            <NHSLogo />
+          </a>
         </div>
 
         {/* Service name */}
         <div style={styles.serviceName}>
-          <span style={styles.serviceText}>{title}</span>
+          <span style={styles.serviceText} role="heading" aria-level="1">{title}</span>
         </div>
       </div>
     </header>
